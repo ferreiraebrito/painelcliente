@@ -1,0 +1,20 @@
+{
+  "name": "Hub F&B - Aplicações",
+  "short_name": "Hub F&B",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/SKTkPpgW/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/638tJ1Pn/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "."
+}
