@@ -1,142 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
-    <base target="_top">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Cliente - F&B</title>
-    <meta name="theme-color" content="#FFFFFF">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/rmDMXYHr/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/JnsMVdFJ/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/FRYN5n6S/favicon-16x16.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Cliente - F&B</title>
+    <meta name="theme-color" content="#FFFFFF">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/rmDMXYHr/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/JnsMVdFJ/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/FRYN5n6S/favicon-16x16.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
 
-    <style>
-        /* === Reset e base === */
-        * { box-sizing: border-box; }
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            font-family: 'Segoe UI', sans-serif;
-            overflow: hidden; 
-            background-color: #D9D9D9; 
-        }
+    <style>
+        /* === Reset e base === */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Essencial para o flex-grow funcionar */
+            width: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden; 
+            background-color: #D9D9D9; 
+        }
 
-        /* === SPLASH SCREEN (CORRIGIDO) === */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            /* Garante 100% da tela */
-            height: 100%; 
-            width: 100%;
-            background-color: #ffffff;
-            z-index: 9999;
-            /* Centralização com Flexbox (Robusto) */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Transição */
-            transition: opacity 0.5s ease-out;
-            opacity: 1;
-        }
-        #splash-screen img {
-            /* Tamanho máximo (como antes) */
-            max-width: 250px;
-            /* Garante que não estoure em telas pequenas */
-            width: 80%; 
-            height: auto;
-            margin: auto; /* Centralização extra */
-        }
-        #splash-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        /* === SPLASH SCREEN (Centralizado) === */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #ffffff;
+            z-index: 9999;
+            display: flex; /* Centralização com flex */
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+            opacity: 1;
+        }
+        #splash-screen img {
+            max-width: 250px;
+            width: 80%;
+            height: auto;
+        }
+        #splash-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-
-        /* === LAYOUT DO APP (CORRIGIDO) === */
-        .app-container {
-            /* Começa invisível (como antes) */
-            visibility: hidden; 
-            /* Usa 100% da altura (como antes) */
-            height: 100%;
-            width: 100%;
-            /*              * A CORREÇÃO MAIS IMPORTANTE: 
-             * Usando flexbox para forçar o conteúdo a preencher a tela.
-            */
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Torna visível após o splash (como antes) */
-        #splash-screen.hidden + .app-container {
-            visibility: visible; 
-        }
-
-        /*          * NOVO: Wrapper de conteúdo (como no seu Hub original)
-         */
-        #content {
-            flex-grow: 1; /* <-- Esta é a mágica: faz o div crescer */
-            width: 100%;
-            border: none;
-            /* Adicionado para o iframe se comportar bem dentro dele */
-            display: flex; 
-            flex-direction: column;
-        }
-
-        /* Iframe (CORRIGIDO) */
-        #appFrame {
-            flex-grow: 1; /* <-- O iframe cresce para preencher o #content */
-            width: 100%;
-            height: 100%; /* Agora height 100% funciona */
-            border: none;
-        }
-    </style>
+        /* * === CORREÇÃO DE LAYOUT (Flexbox Robusto) ===
+         */
+        .app-container {
+            visibility: hidden; /* Começa invisível */
+            height: 100%; /* Ocupa 100% da altura do body */
+            width: 100%;
+            display: flex; /* Força o layout flex */
+            flex-direction: column; /* Organiza os filhos (o iframe) verticalmente */
+        }
+        
+        #splash-screen.hidden + .app-container {
+            visibility: visible;
+        }
+        
+        /* * O Iframe agora é um item flexível e vai crescer
+         */
+        #appFrame {
+            flex: 1; /* Mágica: (flex-grow: 1, flex-shrink: 1, flex-basis: 0) */
+            width: 100%;
+            border: none;
+            /* height: 100% foi removido pois 'flex: 1' é melhor */
+        }
+    </style>
 </head>
 
 <body>
 
-        <div id="splash-screen">
-        <img src="https://i.postimg.cc/RF8h0M0M/logo-horizontal.jpg" alt="Logo Ferreira & Brito">
-    </div>
+    <div id="splash-screen">
+        <img src="https://i.postimg.cc/RF8h0M0M/logo-horizontal.jpg" alt="Logo Ferreira & Brito">
+    </div>
 
-        <div class="app-container">
-                <div id="content">
-            <iframe id="appFrame" title="Painel do Cliente"></iframe>
-        </div>
-    </div>
-        
-    <script>
-        // A URL do seu Painel do Cliente
-        const APP_URL = "https://script.google.com/macros/s/AKfycbxKLrGyELjMQDk8NHMa6yXazObTLJnXhGUag0H_JQ_YgSY6PWp3sULKC-4Ypvz9Jl_L0Q/exec";
+    <div class="app-container">
+        <iframe id="appFrame" title="Painel do Cliente"></iframe>
+    </div>
+        
+    <script>
+        const APP_URL = "https://script.google.com/macros/s/AKfycbxKLrGyELjMQDk8NHMa6yXazObTLJnXhGUag0H_JQ_YgSY6PWp3sULKC-4Ypvz9Jl_L0Q/exec";
 
-        document.addEventListener("DOMContentLoaded", () => {
-            
-          t; // 1. Define o app a ser carregado (atrás do splash)
-            const iframe = document.getElementById('appFrame');
-            iframe.src = APP_URL;
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // 1. Define o app a ser carregado (atrás do splash)
+            const iframe = document.getElementById('appFrame');
+            iframe.src = APP_URL;
 
-            // 2. Lógica do Splash Screen
-            const splash = document.getElementById('splash-screen');
-            const splashDuration = 4000; // 4 segundos
+            // 2. Lógica do Splash Screen
+            const splash = document.getElementById('splash-screen');
+            const splashDuration = 4000; // 4 segundos
 
-            setTimeout(() => {
-                // Inicia o fade-out
-                splash.classList.add('hidden');
-                
-                // Remove o splash do DOM *depois* que a animação (500ms) terminar
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                }, 500); // 500ms é a duração da transição no CSS
+            setTimeout(() => {
+                splash.classList.add('hidden');
+                
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500); // 500ms é a duração da transição no CSS
 
-            }, splashDuration);
+            }, splashDuration);
 
-        });
-    </script>
+        });
+    </script>
 
 </body>
 </html>
