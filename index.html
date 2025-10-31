@@ -4,13 +4,11 @@
     <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Cliente - F&B</title>     <meta name="theme-color" content="#FFFFFF">
-    
-        <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/rmDMXYHr/apple-touch-icon.png">
+    <title>Painel do Cliente - F&B</title>
+    <meta name="theme-color" content="#FFFFFF">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.postimg.cc/rmDMXYHr/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://i.postimg.cc/JnsMVdFJ/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://i.postimg.cc/FRYN5n6S/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="https://i.postimg.cc/SKTkPpgW/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="https://i.postimg.cc/638tJ1Pn/android-chrome-512x512.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="white">
 
@@ -27,45 +25,73 @@
             background-color: #D9D9D9; 
         }
 
-        /* === SPLASH SCREEN (TELA DE ABERTURA) === */
+        /* === SPLASH SCREEN (CORRIGIDO) === */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ffffff; /* Fundo branco */
+            /* Garante 100% da tela */
+            height: 100%; 
+            width: 100%;
+            background-color: #ffffff;
             z-index: 9999;
+            /* Centralização com Flexbox (Robusto) */
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Transição */
             transition: opacity 0.5s ease-out;
             opacity: 1;
         }
         #splash-screen img {
+            /* Tamanho máximo (como antes) */
             max-width: 250px;
+            /* Garante que não estoure em telas pequenas */
+            width: 80%; 
             height: auto;
+            margin: auto; /* Centralização extra */
         }
         #splash-screen.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Layout do App (agora é 100% iframe) */
+
+        /* === LAYOUT DO APP (CORRIGIDO) === */
         .app-container {
+            /* Começa invisível (como antes) */
+            visibility: hidden; 
+            /* Usa 100% da altura (como antes) */
             height: 100%;
             width: 100%;
-            visibility: hidden; /* Começa invisível */
+            /*              * A CORREÇÃO MAIS IMPORTANTE: 
+             * Usando flexbox para forçar o conteúdo a preencher a tela.
+            */
+            display: flex;
+            flex-direction: column;
         }
         
+        /* Torna visível após o splash (como antes) */
         #splash-screen.hidden + .app-container {
-            visibility: visible; /* Fica visível após o splash sumir */
+            visibility: visible; 
         }
 
-        /* O Iframe vai ocupar todo o espaço */
-        #appFrame {
+        /*          * NOVO: Wrapper de conteúdo (como no seu Hub original)
+         */
+        #content {
+            flex-grow: 1; /* <-- Esta é a mágica: faz o div crescer */
             width: 100%;
-            height: 100%;
+            border: none;
+            /* Adicionado para o iframe se comportar bem dentro dele */
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* Iframe (CORRIGIDO) */
+        #appFrame {
+            flex-grow: 1; /* <-- O iframe cresce para preencher o #content */
+            width: 100%;
+            height: 100%; /* Agora height 100% funciona */
             border: none;
         }
     </style>
@@ -78,16 +104,18 @@
     </div>
 
         <div class="app-container">
-        <iframe id="appFrame" title="Painel do Cliente"></iframe>
+                <div id="content">
+            <iframe id="appFrame" title="Painel do Cliente"></iframe>
+        </div>
     </div>
         
     <script>
-        // Esta é a URL que você publicou para o "Painel do Cliente"
+        // A URL do seu Painel do Cliente
         const APP_URL = "https://script.google.com/macros/s/AKfycbxKLrGyELjMQDk8NHMa6yXazObTLJnXhGUag0H_JQ_YgSY6PWp3sULKC-4Ypvz9Jl_L0Q/exec";
 
         document.addEventListener("DOMContentLoaded", () => {
             
-            // 1. Define o app a ser carregado no iframe
+          t; // 1. Define o app a ser carregado (atrás do splash)
             const iframe = document.getElementById('appFrame');
             iframe.src = APP_URL;
 
@@ -99,7 +127,7 @@
                 // Inicia o fade-out
                 splash.classList.add('hidden');
                 
-                // Remove o splash do layout *depois* que a animação (500ms) terminar
+                // Remove o splash do DOM *depois* que a animação (500ms) terminar
                 setTimeout(() => {
                     splash.style.display = 'none';
                 }, 500); // 500ms é a duração da transição no CSS
